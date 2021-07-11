@@ -1,0 +1,123 @@
+# python 3.7.6 64-dit vivacuba
+from gtts import gTTS
+import playsound
+import speech_recognition as sr
+import os
+import time
+import random
+import winsound
+import datetime
+from time import strftime
+
+
+
+def listen_command():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("слушаю тебя:")
+        audio = r.listen(source)
+    try:
+        our_speech = r.recognize_google(audio, language="ru-Ru").lower()
+        print("вы сказали: "+ our_speech)
+        return our_speech
+    except sr.UnknownValueError:
+        return "ошибка"
+    except sr.RequestError as e:
+        return "ошибка"
+    
+
+
+class Alarm:    
+    def __init__(self, h, m, replay):
+        self.h = h
+        self.m = m
+        self.replay = replay
+        
+
+    def signal(self):
+        N = ["0","1","2","3","4","5","6","7","8","9"]
+        while True:
+            date = datetime.datetime.now()
+            
+            now_hour = str(date.hour)
+            now_minute = str(date.minute)
+            for x in N:
+                if now_hour == x:
+                    now_hour = "0" + now_hour
+                if now_minute == x:
+                    now_minute = "0" + now_minute
+            if now_hour == h and now_minute == m:
+                for i in  range(0, replay + 1, 1):
+                    winsound.Beep(2500,1500)
+                    say_message('компьютер готов к отключению. для отмены нажми контрл ц')
+                    time.sleep(2)
+                    say_message('компьютер отключится через пять секунд')
+                    time.sleep(1)
+                    say_message('4')
+                    time.sleep(1)
+                    say_message('3')
+                    time.sleep(1)
+                    say_message('2')
+                    time.sleep(1)
+                    say_message('1')
+                    say_message('один на верёвочке, один на ниточке, один на паутиночке, паутиночка разрывается и компьютер выключается')
+                    os.system("C:\\Windows\\System32\\Shutdown.exe -s -t 00")
+                    exit()
+                
+
+                
+def say_message(message):
+    
+    voice = gTTS(message, lang="ru")
+    file_voice_name = "_audio_" + \
+    str(time.time())+"_"+str(random.randint(0, 100000))+".mp3"
+    voice.save(file_voice_name)
+    playsound.playsound(file_voice_name)
+    os.remove(file_voice_name)
+    print("Голосовой ассистент: "+message)
+
+
+date = strftime("%H:%M")    
+say_message('сейчас '+ date)            
+now = datetime.datetime.now()
+say_message('задай время выключения')
+
+tims = listen_command()
+if now.hour >= 0 and now.hour < 10:
+    tims = '0' + tims
+
+
+
+if tims == "сейчас":
+    say_message('выключаю')
+    os.system("C:\\Windows\\System32\\Shutdown.exe -s -t 00")
+   
+
+    
+replay = 1
+
+say_message('компьютер отключится в ' + tims )
+set_hour = True
+h = ""
+m = ""
+for char in tims:
+    if set_hour:
+    
+        if char != ":":
+            h += char
+        else:
+            set_hour = False
+    else:
+        m += char
+        
+a = Alarm(h,m,replay)
+a.signal()
+
+
+    
+
+
+command = listen_command()  # слушает команду
+
+
+
