@@ -76,7 +76,7 @@ class Alarm:
                     time.sleep(1)
                     say_message('1')
                     say_message('один на верёвочке, один на ниточке, один на паутиночке, паутиночка разрывается и компьютер выключается')
-                    os.system("C:\\Windows\\System32\\Shutdown.exe -s -message 00")
+                    os.system("C:\\Windows\\System32\\Shutdown.exe -s -t 00")
                     exit()
           
    
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     if now.hour >= 0 and now.hour < 10:
         spik = '0' + spik
     if spik == 'сейчас':
-        os.system("C:\\Windows\\System32\\Shutdown.exe -s -message 00")
+        os.system("C:\\Windows\\System32\\Shutdown.exe -s -t 00")
         exit()    
     say_message('компьютер отключится в ' + spik )
 
